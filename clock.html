@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>iPad Clock</title>
+  <style>
+    body {
+      background: black;
+      color: lime;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #clock {
+      font-size: 10vw;
+    }
+  </style>
+</head>
+<body>
+  <div id="clock"></div>
+  <script>
+    function updateClock() {
+      const now = new Date();
+      let h = now.getHours().toString().padStart(2,'0');
+      let m = now.getMinutes().toString().padStart(2,'0');
+      let s = now.getSeconds().toString().padStart(2,'0');
+      document.getElementById("clock").innerText = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
