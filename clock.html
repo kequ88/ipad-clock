@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>iPad Clock with Lunar Calendar</title>
+  <title>iPad Clock</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); /* Digital style font */
 
+    body {
+      background: black;
+      color: red;
+      font-family: 'Orbitron', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;a<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Clock with Lunar Calendar</title>
+  <style>
     body {
       display: flex;
       flex-direction: column;
@@ -13,23 +25,91 @@
       justify-content: center;
       height: 100vh;
       background-color: black;
-      font-family: 'Orbitron', monospace;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .date {
+      font-size: 2em;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .lunar {
+      font-size: 1.5em;
+      color: lightgreen;
+      margin-bottom: 10px;
+    }
+    .clock {
+      font-size: 3em;
+      color: violet;
+    }
+  </style>
+</head>
+<body>
+  <div class="date" id="date"></div>
+  <div class="lunar" id="lunar"></div>
+  <div class="clock" id="clock"></div>
+
+  <script>
+    // ===== Date & Time =====
+    function updateClock() {
+      const now = new Date();
+
+      // Gregorian Date
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+
+      // Time
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+      document.getElementById('clock').textContent = timeStr;
+    }
+
+    // ===== Chinese Lunar Calendar (农历) =====
+    // Using Intl API with Chinese locale (shows lunar calendar in most browsers)
+    function updateLunar() {
+      try {
+        const now = new Date();
+        const lunar = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }).format(now);
+        document.getElementById('lunar').textContent = "农历 " + lunar;
+      } catch (e) {
+        document.getElementById('lunar').textContent = "农历 not supported in this browser";
+      }
+    }
+
+    // Update every second
+    setInterval(() => {
+      updateClock();
+      updateLunar();
+    }, 1000);
+
+    // Initial call
+    updateClock();
+    updateLunar();
+  </script>
+</body>
+</html>
+
+      align-items: center;
+      height: 100vh;
       margin: 0;
       text-align: center;
     }
+
     #date {
-      font-size: 3vw;
-      color: white;
+      font-size: 4vw;
       margin-bottom: 1vh;
     }
+
     #lunar {
-      font-size: 2vw;
-      color: lightgreen;
+      font-size: 2.5vw;
       margin-bottom: 4vh;
     }
+
     #clock {
-      font-size: 12vw; /* Big font */
-      color: violet;
+      font-size: 12vw;
       letter-spacing: 0.1em;
     }
   </style>
@@ -40,19 +120,44 @@
   <div id="clock"></div>
 
   <script>
-    // --- Update Clock & Date ---
+    // Function to calculate a simple lunar calendar placeholder
+    function getLunarDate() {
+      // NOTE: This is a simple placeholder, not an accurate lunar calculation
+      // For a real lunar calendar, you'd need a proper algorithm or API
+      const lunarNames = [
+        "New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+        "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent"
+      ];
+      const now = new Date();
+      const synodicMonth = 29.53058867; // average moon cycle in days
+      const knownNewMoon = new Date("2025-01-29T05:37:00Z"); // a known new moon date
+      const daysSince = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
+      const phaseIndex = Math.floor((daysSince % synodicMonth) / (synodicMonth / 8));
+      return lunarNames[phaseIndex];
+    }
+
     function updateClock() {
       const now = new Date();
 
-      // Gregorian date
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      // --- Date ---
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       document.getElementById("date").innerText = now.toLocaleDateString('en-US', options);
 
-      // Chinese Lunar Calendar (农历)
-      try {
-        const lunar = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }).format(now);
-        docum
+      // --- Lunar ---
+      document.getElementById("lunar").innerText = "Lunar: " + getLunarDate();
+
+      // --- Clock (12hr format with AM/PM) ---
+      let h = now.getHours();
+      let m = now.getMinutes().toString().padStart(2,'0');
+      let s = now.getSeconds().toString().padStart(2,'0');
+      let ampm = h >= 12 ? "PM" : "AM";
+      h = h % 12;
+      h = h ? h : 12; // convert 0 -> 12
+      document.getElementById("clock").innerText = `${h}:${m}:${s} ${ampm}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
