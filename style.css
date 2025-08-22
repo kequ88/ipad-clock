@@ -1,0 +1,27 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: black;
+    color: white;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .clock-container {
+    text-align: center;
+  }
+  
+  #clock {
+    font-size: 10vw; /* responsive size */
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  
