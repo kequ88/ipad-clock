@@ -1,79 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
+<!DOCTYPE HTML> <!--document type definition(DTD)-->
+<html lang="en"> <!--document language declaration-->
+
+<head> <!--defining the heading of the doc-->
+  <meta charset="utf-8"> <!-- specifies the character encoding for the HTML document-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iPad Clock</title>
-  <link rel="stylesheet" href="style.css">
+  <!--refers to the size of a window or visible area on a screen-->
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- to choose what version of Internet Explorer the page should be rendered as-->
+  <link href="style.css" rel="stylesheet">
+  <!--href attribute specifies the location (URL) of the external resource; here css stylesheet. The rel attribute specifies the relationship between the two documents; here stylesheet-->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <!--font from google font-->
+  <title> CLOCK</title> <!--title of the webpage-->
 </head>
+
 <body>
-  <div class="clock-container">
+  <div>
     <div id="date"></div>
     <div id="lunar"></div>
-    <div id="clock"></div>
+    <div id="clock" class="clock-container"></div>
   </div>
+  <script src="clock.js"></script> <!-- to link it to java script-->
+</body> <!--end of body tag-->
 
-  <script>
-    // Convert lunar day number into iOS-style Chinese format
-    function getLunarDayName(day) {
-      const chineseNums = ["一","二","三","四","五","六","七","八","九","十"];
-      if (day <= 10) {
-        return "初" + chineseNums[day - 1];       // 初一 ~ 初十
-      } else if (day < 20) {
-        return "十" + chineseNums[day - 11];      // 十一 ~ 十九
-      } else if (day === 20) {
-        return "二十";
-      } else if (day < 30) {
-        return "廿" + chineseNums[day - 21];      // 廿一 ~ 廿九
-      } else {
-        return "三十";                            // 三十
-      }
-    }
-
-    // Get Lunar Calendar (农历)
-    function getLunarDate(date) {
-      try {
-        const lunarFormatter = new Intl.DateTimeFormat('zh-u-ca-chinese', { 
-          year: 'numeric', month: 'long', day: 'numeric' 
-        });
-        const lunarString = lunarFormatter.format(date); 
-        // Example: "2025乙巳年七月1"
-
-        // Extract the day number at the end
-        const match = lunarString.match(/(\d+)$/);
-        if (match) {
-          const dayNum = parseInt(match[1], 10);
-          const lunarDayName = getLunarDayName(dayNum);
-          return lunarString.replace(/\d+$/, lunarDayName);
-        }
-        return lunarString;
-      } catch {
-        return "农历不支持";
-      }
-    }
-
-    function updateClock() {
-      const now = new Date();
-
-      // --- Clock (12-hour format with AM/PM) ---
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // 0 → 12
-      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-
-      // --- Gregorian Calendar ---
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
-
-      // --- Lunar Calendar ---
-      document.getElementById('lunar').textContent = getLunarDate(now);
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
-</body>
-</html>
+</html> <!--end of html doc-->
