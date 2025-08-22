@@ -12,7 +12,86 @@
       font-family: 'Orbitron', monospace;
       display: flex;
       flex-direction: column;
+      justify-content: center;a<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Clock with Lunar Calendar</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      height: 100vh;
+      background-color: black;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .date {
+      font-size: 2em;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .lunar {
+      font-size: 1.5em;
+      color: lightgreen;
+      margin-bottom: 10px;
+    }
+    .clock {
+      font-size: 3em;
+      color: violet;
+    }
+  </style>
+</head>
+<body>
+  <div class="date" id="date"></div>
+  <div class="lunar" id="lunar"></div>
+  <div class="clock" id="clock"></div>
+
+  <script>
+    // ===== Date & Time =====
+    function updateClock() {
+      const now = new Date();
+
+      // Gregorian Date
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+
+      // Time
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+      document.getElementById('clock').textContent = timeStr;
+    }
+
+    // ===== Chinese Lunar Calendar (农历) =====
+    // Using Intl API with Chinese locale (shows lunar calendar in most browsers)
+    function updateLunar() {
+      try {
+        const now = new Date();
+        const lunar = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }).format(now);
+        document.getElementById('lunar').textContent = "农历 " + lunar;
+      } catch (e) {
+        document.getElementById('lunar').textContent = "农历 not supported in this browser";
+      }
+    }
+
+    // Update every second
+    setInterval(() => {
+      updateClock();
+      updateLunar();
+    }, 1000);
+
+    // Initial call
+    updateClock();
+    updateLunar();
+  </script>
+</body>
+</html>
+
       align-items: center;
       height: 100vh;
       margin: 0;
